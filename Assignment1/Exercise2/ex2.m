@@ -90,8 +90,8 @@ end
 %% Find optimal value of d and plot corresponding confusion matrix
 
 [min_err_perc, d_optimal] = min(perc_miscl);
-disp(['The optimal dimension d is ', d_optimal, ...
-    ' with correspoinding error ', min_err_perc]);
+disp(['The optimal dimension d is ', num2str(d_optimal), ...
+    ' with correspoinding error ', num2str(min_err_perc), '%']);
 figure
 confusionchart(conf{d_optimal});
 title(['Confusion matrix for d=', num2str(d_optimal)]);
