@@ -1,12 +1,14 @@
 images = loadMNISTImages('train-images.idx3-ubyte');
 labels = loadMNISTLabels('train-labels.idx1-ubyte');
+test_images = loadMNISTImages('
 
-d = 1;
+d = 3;
 
 %% (1) Make the training data zero mean
 
 % Mean of each pixel/row ( --> a probably very strange mean image)
-images = images - mean(images, 2);
+mean_img = mean(images, 2);
+images = images - mean_img;
 
 
 %% (2) Calculate the covariance
@@ -18,5 +20,49 @@ covariance = cov(images');
 [eigvec, eigval] = eig(covariance);
 
 %% (4) Choose d eigenvectors with largest eigenvalues
+    % = the principal components of the data
+    % = transformation matrix W
 
-eigval_vec = 
+eigval_1d = diag(eigval);
+[max_eigvals, max_idxs] = maxk(eigval_1d',d);
+W = []; 
+for i = max_idxs
+   W = [W eigvec(:,i)]; 
+end
+
+%% (5) Project the data
+
+% y = W'x
+
+projected_imgs = W'*images; % now the data has a lower dimension!
+
+
+%% (6) Project reduced dimensional data for each class
+
+for class = 0:9
+    class_idxs = find(labels==class);
+    class_imgs = projected_imgs(:,class_idxs);
+    mean_class = mean(class_imgs,2);
+    class_imgs = class_imgs - mean_class;
+    class_cov = cov(class_imgs');
+    
+    
+    
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
