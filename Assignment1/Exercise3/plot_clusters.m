@@ -13,5 +13,7 @@ function plot_clusters(points, labels, Title)
     end
     
     title(Title);
+    filename = strjoin([Title,".png"]);
+    saveas(gcf, filename);
 
 end

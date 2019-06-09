@@ -1,0 +1,66 @@
+load('gesture_dataset.mat');
+K = 7;
+titles = ["l-gesture", "o-gesture", "x-gesture"];
+
+% Split vector
+v = [0.08, 0.05, 0.02];
+
+gestures = {gesture_l, gesture_o, gesture_x};
+num_gests = size(gestures);
+
+for i = 1:num_gests(2)
+    % Distortions
+    J = zeros(1,K); 
+    % Class centers
+    centers = zeros(3,K);
+    % Data points
+    [m,n,o] = size(gestures{i});
+    all_data = reshape(gestures{i},[m*n,o]);
+    % Class labels
+    labels = ones(1,m*n);
+    
+    %% (1) Initialization
+    centers(:,1) = mean(all_data); % class center
+    dists = zeros(1,m*n);
+    for p = 1:m*n % points
+        diff = all_data(p,:)-centers(:,1)';
+        dists(1,p) = sqrt(diff*diff');
+    end
+    J(1,1) = sum(dists); % distortion
+    
+    for k = 1:K
+        %% (2) Choose class with largest distortion
+        [max_J, class] = max(J);
+
+        %% (3) Split the class
+        for p = 1:m*n
+            
+            if labels(p) == class
+                diff = all_data(p,:)-centers(:,class)'+v;
+                dist_1 = sqrt(diff*diff');
+                diff = all_data(p,:)-centers(:,class)'-v;
+                dist_2 = sqrt(diff*diff');
+                
+                if dist_2 < dist_1
+                    labels(p) = k+1;
+                end
+            end
+        end
+        
+        %% (4) Update the centers and distortions
+        centers(:,class) = mean(all_data(labels==class,:));
+        centers(:,k+1) = mean(all_data(labels==k+1,:));
+        
+        J(1,class) = 
+    end
+    plot_clusters(all_data, labels, titles(i));
+    
+end
+
+
+
+
+
+
+
+

@@ -3,7 +3,6 @@ function Exercise3_kmeans(gesture_l, ...
     init_cluster_x, k)
 
 titles = ["l-gesture", "o-gesture", "x-gesture"];
-plots = [];
 
 %% (1) Initialization
 gestures = {gesture_l, gesture_o, gesture_x};
