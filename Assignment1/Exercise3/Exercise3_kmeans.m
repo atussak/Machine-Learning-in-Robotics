@@ -1,4 +1,5 @@
 load('gesture_dataset.mat');
+titles = ["l-gesture", "o-gesture", "x-gesture"];
 
 %% (1) Initialization
 k = 7;
@@ -44,4 +45,6 @@ for i = 1:num_gests(2)
         J = J_new;
         
     end
+    
+    plot_clusters(gesture, labels, titles(i));
 end
