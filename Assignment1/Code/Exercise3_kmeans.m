@@ -1,11 +1,10 @@
-function [plot_l, plot_o, plot_x] = Exercise3_kmeans(gesture_l, ...
-    gesture_o, gesture_x)
-load('gesture_dataset.mat');
+function Exercise3_kmeans(gesture_l, ...
+    gesture_o, gesture_x, init_cluster_l, init_cluster_o, ...,
+    init_cluster_x, k)
+
 titles = ["l-gesture", "o-gesture", "x-gesture"];
 
 %% (1) Initialization
-k = 7;
-
 gestures = {gesture_l, gesture_o, gesture_x};
 init_clusters = {init_cluster_l, init_cluster_o, init_cluster_x};
 clusters = init_clusters;

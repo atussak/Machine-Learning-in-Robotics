@@ -1,5 +1,5 @@
-load('gesture_dataset.mat');
-K = 7;
+function Exercise3_nubs(gesture_l, gesture_o, gesture_x, K)
+
 titles = ["l-gesture", "o-gesture", "x-gesture"];
 
 % Split vector
@@ -28,30 +28,37 @@ for i = 1:num_gests(2)
     end
     J(1,1) = sum(dists); % distortion
     
-    for k = 1:K
+    for k = 1:K-1
         %% (2) Choose class with largest distortion
-        [max_J, class] = max(J);
+        [~, split_cl] = max(J);
+        
+        disp(split_cl);
 
         %% (3) Split the class
+        dists_1 = zeros(1,m*n);
+        dists_2 = zeros(1,m*n);
         for p = 1:m*n
-            
-            if labels(p) == class
-                diff = all_data(p,:)-centers(:,class)'+v;
+            if labels(p) == split_cl
+                diff = all_data(p,:)-(centers(:,split_cl)'+v);
                 dist_1 = sqrt(diff*diff');
-                diff = all_data(p,:)-centers(:,class)'-v;
+                diff = all_data(p,:)-(centers(:,split_cl)'-v);
                 dist_2 = sqrt(diff*diff');
                 
                 if dist_2 < dist_1
                     labels(p) = k+1;
+                    dists_2(1,p) = dist_2;
+                else
+                    dists_1(1,p) = dist_1;
                 end
             end
         end
         
         %% (4) Update the centers and distortions
-        centers(:,class) = mean(all_data(labels==class,:));
+        centers(:,split_cl) = mean(all_data(labels==split_cl,:));
         centers(:,k+1) = mean(all_data(labels==k+1,:));
         
-        J(1,class) = 
+        J(1,split_cl) = sum(dists_1);
+        J(1,k+1) = sum(dists_2);
     end
     plot_clusters(all_data, labels, titles(i));
     
