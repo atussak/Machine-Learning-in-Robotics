@@ -1,4 +1,4 @@
-function [cl_err_plot, d_optimal, min_cl_err, conf_plot] = Exercise2(d_max)
+function [d_optimal, min_cl_err] = Exercise2(d_max)
 
     images = loadMNISTImages('train-images.idx3-ubyte');
     labels = loadMNISTLabels('train-labels.idx1-ubyte');
@@ -91,10 +91,8 @@ function [cl_err_plot, d_optimal, min_cl_err, conf_plot] = Exercise2(d_max)
     %% Find optimal value of d and plot corresponding confusion matrix
 
     [min_cl_err, d_optimal] = min(perc_miscl);
-    figure
-    conf_plot = confusionchart(conf{d_optimal},0:9);
-    conf_plot.title(['Confusion matrix for d=', num2str(d_optimal)]);
-    saveas(gcf, "confusion.png");
+    
+    helperDisplayConfusionMatrix(conf{d_optimal});
 
     %% Plot the classification error corresponding to d-values
 
