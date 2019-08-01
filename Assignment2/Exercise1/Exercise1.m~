@@ -27,13 +27,17 @@ end
 
 % E-step
 
-gamma = zeros(1,k);
-
+gamma = zeros(n,k);
 for i = 1:4
-    gamma(i) = pi(i)*mvnpdf(Data, mu(i), sigma(:,:i));
+    gamma(:,i) = pi(i)*mvnpdf(Data', mu(i), sigma(:,:,i));
 end
 
+% M-step
 
+for 
+for i = 1:n
+    
+end
 
 
 
