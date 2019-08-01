@@ -1,1 +1,25 @@
-load("dataGMM.mat")
+load("dataGMM.mat");
+
+%% a
+
+k = 4; % number of components in GMM
+[~,n] = size(Data);
+% Init parameters
+[idx, c, sumd] = kmeans(Data', k);
+
+pi     = zeros(1,k);
+mu     = zeros(2,k);
+sigma  = zeros(k);
+
+for i = 1:4
+    data_i = Data(:, idx==i);
+    nk = sum(idx==i);
+    
+    pi(i) = nk/n;
+    mu(:,i) = mean(data_i,2)';
+    
+end
+
+
+%% b
+
