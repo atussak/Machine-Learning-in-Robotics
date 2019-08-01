@@ -1,17 +1,17 @@
 load("dataGMM.mat");
 
-%% a
+%% a - init parameters
 
 k = 4; % number of components in GMM
 [d,n] = size(Data);
-% Init parameters
-[idx, c, sumd] = kmeans(Data', k);
+
+[idx, c] = kmeans(Data', k);
 
 pi     = zeros(1,k);
 mu     = zeros(d,k);
 sigma  = zeros(d,d,k);
 
-for i = 1:4
+for i = 1:k
     data_i = Data(:, idx==i);
     nk = sum(idx==i);
     
@@ -23,5 +23,28 @@ for i = 1:4
 end
 
 
-%% b
+%% b - EM algorithm
+
+% E-step
+
+gamma = zeros(n,k);
+for i = 1:4
+    gamma(:,i) = pi(i)*mvnpdf(Data', mu(i), sigma(:,:,i));
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
