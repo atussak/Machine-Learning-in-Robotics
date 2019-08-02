@@ -31,6 +31,7 @@ gamma = zeros(n,k);
 for i = 1:4
     gamma(:,i) = pi(i)*mvnpdf(Data', mu(i), sigma(:,:,i));
 end
+% 
 for j = 1:n
     gamma(j,:) = gamma(j,:)/sum(gamma(j,:));
 end
@@ -49,9 +50,9 @@ end
 
 % Evaluate
 
-loss = zeros(1,k);
+loss = 0;
 for i = 1:k
-    loss(i) = gamma(:,i)'*(log(pi(i))+log(mvnpdf(Data', mu(i), sigma(:,:,i)))-log(gamma(:,i)));
+    loss = loss + gamma(:,i)'*(log(pi(i))+log(mvnpdf(Data', mu(i), sigma(:,:,i))+0.00001)-log(gamma(:,i)+0.00001));
 end
 
 
