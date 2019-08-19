@@ -19,51 +19,92 @@ for i = 1:k
     mu(:,i) = mean(data_i,2)';
     
     diff = data_i - mu(:,i);
-    sigma(:,:,i) = pi(i)*diff*diff'/nk;
+    sigma(:,:,i) = pi(i)*diff*diff'/double(nk);
 end
 
 
 %% b - EM algorithm
+converged = false;
+counter = 0;
+conv_criteria = 0.5;
+last_logl = 0;
+logl = 1;
+while ~ converged
+    % E-step
 
-% E-step
+    % Calculate responsibilities
+    gamma = zeros(n,k);
+    for i = 1:4
+        determinant = det(sigma(:,:,i)); % check if sigma is pos def
+        if determinant <= 0.00001
+            sigma(:,:,i) = eye(2,2)*0.0001;
+        end
+        gamma(:,i) = pi(i)*mvnpdf(Data', mu(i), sigma(:,:,i));
+    end
+    
+    % Normalizing
+    for j = 1:n
+        gamma(j,:) = gamma(j,:)./sum(gamma(j,:));
+    end
 
-gamma = zeros(n,k);
-for i = 1:4
-    gamma(:,i) = pi(i)*mvnpdf(Data', mu(i), sigma(:,:,i));
+    % M-step
+
+    % Re-estimate parameters using the current responsibilities
+    for i = 1:k
+        nk = sum(gamma(:,i));
+        
+        pi(i) = nk/n;
+        mu(:,i) = gamma(:,i)'*Data'/nk;
+
+        diff = Data - mu(:,i);
+        sigma(:,:,i) = diff*diag(gamma(:,i))*diff'/nk;
+    end
+    
+    % Evaluate the log likelihood and check for convergence
+    logl = 0;
+%     for j = 1:n
+%         temp_loss = 0;
+%         for i = 1:k
+%             temp_loss = temp_loss + mvnpdf(Data(:,j)', mu(i), sigma(:,:,i));
+%         end
+%         logl = logl + log(temp_loss+10e-20);
+%     end
+    for i = 1:k
+       logl = logl + pi(i)*mvnpdf(Data', mu(:,i)', sigma(:,:,i));
+    end
+    
+    conv_test = abs(last_logl-logl)
+    if conv_test < conv_criteria
+        converged = true;
+    end
+    last_logl = logl;
+    
+    counter = counter + 1;
+    if counter > 500
+        converged = true;
+    end
 end
-% 
-for j = 1:n
-    gamma(j,:) = gamma(j,:)/sum(gamma(j,:));
-end
 
-% M-step
+
+%% Visualize densities
+
+n_plot = 100;
+X = -0.1:0.2/(n_plot-1):0.1;
+Y = -0.1:0.2/(n_plot-1):0.1;
+data = combvec(X,Y);
+Z = zeros(100,100);
 
 for i = 1:k
-    nk = sum(gamma(:,i));
+    Z_temp = mvnpdf(data', mu(:,i)', sigma(:,:,i));
+    for r = 0:n_plot-1
+       Z(r+1,:) = Z(r+1,:)' + Z_temp(r*n_plot+1:(r+1)*n_plot);
+    end
     
-    pi(i) = nk/n;
-    mu(:,i) = gamma(:,i)'*Data'/nk;
-    
-    diff = Data - mu(:,i);
-    sigma(:,:,i) = diff*diag(gamma(:,i))*diff'/nk;
 end
+Z = Z./sum(sum(Z));
 
-% Evaluate
-
-loss = 0;
-for i = 1:k
-    loss = loss + gamma(:,i)'*(log(pi(i))+log(mvnpdf(Data', mu(i), sigma(:,:,i))+0.00001)-log(gamma(:,i)+0.00001));
-end
-
-
-
-
-
-
-
-
-
-
-
-
+figure
+density_plot = surf(X,Y,Z);
+title('Density values');
+saveas(gcf, strcat("ex1.png"));
 
