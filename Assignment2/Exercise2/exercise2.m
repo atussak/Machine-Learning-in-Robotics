@@ -7,11 +7,7 @@ load("pi.txt");
 
 load("Test.txt");
 
-% Goal: Find probability of sequence
-
-test_size = size(Test);
-num_sequences = test_size(2);
-T = test_size(1);
+[T, num_sequences] = size(Test);
 
 %% Forward procedure
 
@@ -34,7 +30,7 @@ for O = 1:num_sequences
             end
             alpha(j) = sum*B(Test(t+1,O),j);
         end
-    end
+    end 
     
     % Termination
     for i = 1:N

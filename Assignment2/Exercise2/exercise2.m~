@@ -7,11 +7,7 @@ load("pi.txt");
 
 load("Test.txt");
 
-% Goal: Find probability of sequence
-
-test_size = size(Test);
-num_sequences = test_size(2);
-T = test_size(1);
+[T, num_sequences] = size(Test);
 
 %% Forward procedure
 
@@ -34,7 +30,7 @@ for O = 1:num_sequences
             end
             alpha(j) = sum*B(Test(t+1,O),j);
         end
-    end
+    end 
     
     % Termination
     for i = 1:N
@@ -46,6 +42,8 @@ classification = zeros(1,num_sequences);
 for i = 1:num_sequences
    if log(probabilities) > -115
        classification(i) = 1;
-   e
+   else
+       classification(i) = 2;
+   end
 end
 
