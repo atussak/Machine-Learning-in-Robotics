@@ -87,5 +87,5 @@ Z = Z./sum(sum(Z));
 figure
 density_plot = surf(X,Y,Z);
 title('Density values');
-saveas(gcf, strcat("ex1.png"));
+% saveas(gcf, strcat("ex1.png"));
 
