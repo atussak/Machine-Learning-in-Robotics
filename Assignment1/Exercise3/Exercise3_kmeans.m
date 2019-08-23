@@ -17,7 +17,7 @@ for i = 1:num_gests(2)
     J = inf;
     decrement = inf;
     
-    while decrement > 10e-6
+    while decrement >= 10e-6
 
         %% (2) E-step
         labels = zeros(1, m*n);

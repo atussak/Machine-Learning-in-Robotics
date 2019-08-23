@@ -125,7 +125,7 @@ function par = Exercise1(k)
     end
     par3 = inv(X'*X)*X'*theta';
 
-    
+
     % Save learned parameters
     par = {par1, par2, par3};
     save('params', 'par');
